@@ -1,58 +1,64 @@
-package Mini_project;
-import java.util.ArrayList;
-public class videostore {
-	public class videoStore {
-	    private ArrayList<video> store = new ArrayList<>();
+package mini_project;
 
-	    public void addVideo(String name) {
-	        store.add(new video(name));
-	        System.out.println("Video added: " + name);
-	    }
-
-	    public void doCheckout(String name) {
-	        for (video video : store) {
-	            if (video.getName().equalsIgnoreCase(name)) {
-	                video.doCheckout();
-	                System.out.println("Video checked out: " + name);
-	                return;
-	            }
-	        }
-	        System.out.println("Video not found: " + name);
-	    }
-
-	    public void doReturn(String name) {
-	        for (video video : store) {
-	            if (video.getName().equalsIgnoreCase(name)) {
-	                video.doReturn();
-	                System.out.println("Video returned: " + name);
-	                return;
-	            }
-	        }
-	        System.out.println("Video not found: " + name);
-	    }
-
-	    public void receiveRating(String name, int rating) {
-	        for (video video : store) {
-	            if (video.getName().equalsIgnoreCase(name)) {
-	                video.receiveRating(rating);
-	                System.out.println("Rating " + rating + " has been assigned to " + name);
-	                return;
-	            }
-	        }
-	        System.out.println("Video not found: " + name);
-	    }
-
-	    public void listInventory() {
-	        System.out.println("\n--- Video Inventory ---");
-	        for (video video : store) {
-	            System.out.println("Name: " + video.getName() +
-	                               " | Checked Out: " + video.getCheckout() +
-	                               " | Rating: " + video.getRating());
-	        }
-	    }
+public class VideoStore {
+	Video[] store;
+	int count;
+	public VideoStore(int size) {
+		store = new Video[size];
+		count = 0;
 	}
-
-
-
-
+	void addVideo(String name) {
+		if (count < store.length) {
+			store[count] = new Video(name);
+			count++;
+		} else {
+			System.out.println("Store is full, cannot add more videos.");
+		}
+	}
+	void doCheckout(String name) {
+		for (int i = 0; i < count; i++) {
+			if (store[i].getName().equals(name)) {
+				if (!store[i].getCheckout()) {
+					store[i].doCheckout();
+					System.out.println("Video " + name + " checked out successfully.");
+				} else {
+					System.out.println("Video " + name + " is already checked out.");
+				}
+				return;
+			}
+		}
+		System.out.println("Video " + name + " not found in the store.");
+	}
+	void doReturn(String name) {
+		for (int i = 0; i < count; i++) {
+			if (store[i].getName().equals(name)) {
+				if (store[i].getCheckout()) {
+					store[i].doReturn();
+					System.out.println("Video " + name + " returned successfully.");
+				} else {
+					System.out.println("Video " + name + " is not checked out.");
+				}
+				return;
+			}
+		}
+		System.out.println("Video " + name + " not found in the store.");
+	}
+	void receiveRating(String name, int rating) {
+		for (int i = 0; i < count; i++) {
+			if (store[i].getName().equals(name)) {
+				store[i].receiveRating(rating);
+				System.out.println("Rating " + rating + " received for video " + name + ".");
+				return;
+			}
+		}
+		System.out.println("Video " + name + " not found in the store.");
+	}
+	void listInventory() {
+		System.out.println("Inventory of the store:");
+		for (int i = 0; i < count; i++) {
+			System.out.println("Video Name: " + store[i].getName());
+			System.out.println("Rating: " + (store[i].getRating() == -1 ? "Not Rated" : store[i].getRating()));
+			System.out.println("Checkout: " + (store[i].getCheckout() ? "Yes" : "No"));
+		}
+	}
 }
